@@ -66,27 +66,65 @@
 .gate-watcher-eye {
   display: block;
   flex: 0 0 auto;
-  filter: drop-shadow(0 0 6px rgba(255, 69, 0, 0.55));
+  line-height: 0;
 }
 
-.gate-watcher-eye .eye-track {
-  transform-box: fill-box;
-  transform-origin: center center;
+.gate-watcher-eye .watcher-eye {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
-.gate-watcher-eye .eye-terminator {
-  mix-blend-mode: multiply;
-  pointer-events: none;
+.gate-watcher-eye .eye-fire {
+  filter: drop-shadow(0 0 4px #ff4500) drop-shadow(0 0 14px rgba(255, 90, 0, 0.55));
 }
 
-.gate-watcher-eye .eye-rim,
-.gate-watcher-eye .eye-specular {
-  mix-blend-mode: screen;
-  pointer-events: none;
+.gate-watcher-eye .eye-iris-outer {
+  animation: gate-eye-flame-1 0.55s infinite alternate;
 }
 
-.gate-watcher-eye .eye-glow {
-  opacity: 0.75;
+.gate-watcher-eye .eye-iris-mid {
+  animation: gate-eye-flame-2 0.35s infinite alternate-reverse;
+}
+
+.gate-watcher-eye .eye-iris-core {
+  animation: gate-eye-flame-3 0.28s infinite alternate;
+}
+
+@keyframes gate-eye-flame-1 {
+  0% {
+    fill: #991b1b;
+    opacity: 0.85;
+  }
+
+  100% {
+    fill: #b91c1c;
+    opacity: 1;
+  }
+}
+
+@keyframes gate-eye-flame-2 {
+  0% {
+    fill: #ea580c;
+    opacity: 0.7;
+  }
+
+  100% {
+    fill: #f97316;
+    opacity: 1;
+  }
+}
+
+@keyframes gate-eye-flame-3 {
+  0% {
+    fill: #eab308;
+    opacity: 0.75;
+  }
+
+  100% {
+    fill: #facc15;
+    opacity: 1;
+  }
 }
 
 .gate-watcher-menu {
@@ -141,5 +179,11 @@
   .gate-watcher-trigger,
   .gate-watcher-menu {
     transition: none;
+  }
+
+  .gate-watcher-eye .eye-iris-outer,
+  .gate-watcher-eye .eye-iris-mid,
+  .gate-watcher-eye .eye-iris-core {
+    animation: none;
   }
 }

@@ -1,11 +1,11 @@
-import { useTowerEye } from "../blocked/use-tower-eye.js";
+import { useHighresTowerEye } from "../blocked/use-highres-tower-eye.js";
 import { formatGateCounter } from "../lib/gate-counter.js";
 import { domainFromUrl } from "../lib/domains.js";
 import { initI18n, t } from "../lib/i18n/index.js";
 import { sendMessage } from "../lib/messaging.js";
 import { STORAGE_KEYS } from "../lib/constants.js";
 import type { GateStatus, Response } from "../lib/types.js";
-import { WATCHER_EYE_SVG } from "./watcher-eye.js";
+import { mountWatcherEye } from "./watcher-eye.js";
 
 const HOST_ID = "focus-tower-gate-watcher";
 
@@ -40,7 +40,7 @@ function createShadowHost(): { shadow: ShadowRoot; host: HTMLElement } {
   return { shadow: host.attachShadow({ mode: "closed" }), host };
 }
 
-function mountWatcher(gate: GateStatus): () => void {
+async function mountWatcher(gate: GateStatus): Promise<() => void> {
   const { shadow, host } = createShadowHost();
   shadow.innerHTML = "";
 
@@ -60,7 +60,7 @@ function mountWatcher(gate: GateStatus): () => void {
       aria-label="${t("gate.controlsLabel")}"
     >
       <span class="gate-watcher-counter" aria-live="polite"></span>
-      <span class="gate-watcher-eye">${WATCHER_EYE_SVG}</span>
+      <span class="gate-watcher-eye" aria-hidden="true"></span>
     </button>
     <div class="gate-watcher-menu" role="menu" hidden>
       <button type="button" role="menuitem">${t("gate.restartGate")}</button>
@@ -72,7 +72,10 @@ function mountWatcher(gate: GateStatus): () => void {
   const counter = root.querySelector<HTMLElement>(".gate-watcher-counter")!;
   const menu = root.querySelector<HTMLElement>(".gate-watcher-menu")!;
   const restartButton = menu.querySelector<HTMLButtonElement>("button")!;
-  const stopEye = useTowerEye(root);
+  const eyeMount = root.querySelector<HTMLElement>(".gate-watcher-eye")!;
+
+  const mounted = await mountWatcherEye(eyeMount);
+  const stopEye = mounted ? useHighresTowerEye(root) : () => {};
 
   let gateState = gate;
   let menuOpen = false;
@@ -175,7 +178,7 @@ export async function useGateWatcher(): Promise<void> {
       return;
     }
 
-    cleanup = mountWatcher(gate);
+    cleanup = await mountWatcher(gate);
   }
 
   await sync();

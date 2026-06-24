@@ -42,7 +42,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content/gate-watcher.css"],
+      "resources": ["content/gate-watcher.css", "content/watcher-eye.svg"],
       "matches": ["<all_urls>"]
     }
   ]

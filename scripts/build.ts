@@ -15,6 +15,15 @@ function copyStatic(): void {
 }
 
 async function build(): Promise<void> {
+  const generateWatcherEye = Bun.spawnSync(["bun", "run", join(import.meta.dir, "generate-watcher-eye.ts")], {
+    cwd: root,
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  if (generateWatcherEye.exitCode !== 0) {
+    process.exit(generateWatcherEye.exitCode ?? 1);
+  }
+
   copyStatic();
 
   const result = await Bun.build({

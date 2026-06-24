@@ -1,5 +1,3 @@
-const EYE_VIEWBOX_Y = 48;
-const VIEWBOX_HEIGHT = 256;
 const MAX_PUPIL_MOVE = 4;
 const MAX_EYE_MOVE = 1.2;
 const INTENSITY_RANGE = 250;
@@ -9,7 +7,7 @@ export function useHighresTowerEye(root: ParentNode = document): () => void {
     return () => {};
   }
 
-  const svg = root.querySelector<SVGSVGElement>("#barad-dur-highres, .barad-dur-highres");
+  const svg = root.querySelector<SVGSVGElement>("#barad-dur-highres, .barad-dur-highres, .watcher-eye");
   const pupil = root.querySelector<SVGGElement>("#eye-pupil-slit");
   const eyeBall = root.querySelector<SVGGElement>("#eye-ball-group");
 
@@ -18,9 +16,9 @@ export function useHighresTowerEye(root: ParentNode = document): () => void {
   }
 
   function onPointerMove(event: MouseEvent): void {
-    const rect = svg!.getBoundingClientRect();
-    const eyeX = rect.left + rect.width * 0.5;
-    const eyeY = rect.top + rect.height * (EYE_VIEWBOX_Y / VIEWBOX_HEIGHT);
+    const eyeRect = eyeBall!.getBoundingClientRect();
+    const eyeX = eyeRect.left + eyeRect.width * 0.5;
+    const eyeY = eyeRect.top + eyeRect.height * 0.5;
 
     const dx = event.clientX - eyeX;
     const dy = event.clientY - eyeY;
