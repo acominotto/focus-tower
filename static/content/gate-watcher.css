@@ -1,0 +1,145 @@
+:host {
+  all: initial;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.gate-watcher {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 2147483646;
+  font-family: "Press Start 2P", "Courier New", monospace;
+  color: #f5e6d3;
+  pointer-events: auto;
+}
+
+.gate-watcher-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.7rem 0.55rem 0.55rem;
+  border: 2px solid rgba(230, 57, 0, 0.55);
+  border-radius: 999px;
+  background: rgba(10, 8, 6, 0.92);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(230, 57, 0, 0.18);
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    transform 120ms ease;
+}
+
+.gate-watcher-trigger:hover,
+.gate-watcher-trigger:focus-visible {
+  border-color: #ff6600;
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(255, 102, 0, 0.28);
+  outline: none;
+}
+
+.gate-watcher-trigger:active {
+  transform: translateY(1px);
+}
+
+.gate-watcher-trigger[aria-expanded="true"] {
+  border-color: #ff8800;
+}
+
+.gate-watcher-counter {
+  min-width: 3.25rem;
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: #ffb347;
+  text-shadow: 0 0 10px rgba(255, 102, 0, 0.35);
+  text-align: right;
+}
+
+.gate-watcher-eye {
+  display: block;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 0 6px rgba(255, 69, 0, 0.55));
+}
+
+.gate-watcher-eye .eye-track {
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.gate-watcher-eye .eye-terminator {
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.gate-watcher-eye .eye-rim,
+.gate-watcher-eye .eye-specular {
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.gate-watcher-eye .eye-glow {
+  opacity: 0.75;
+}
+
+.gate-watcher-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.55rem);
+  min-width: 11rem;
+  padding: 0.35rem;
+  border: 2px solid rgba(230, 57, 0, 0.45);
+  border-radius: 12px;
+  background: rgba(10, 8, 6, 0.96);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease,
+    visibility 140ms ease;
+}
+
+.gate-watcher-menu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.gate-watcher-menu button {
+  display: block;
+  width: 100%;
+  padding: 0.7rem 0.75rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #f5e6d3;
+  font: inherit;
+  font-size: 0.5rem;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gate-watcher-menu button:hover,
+.gate-watcher-menu button:focus-visible {
+  background: rgba(230, 57, 0, 0.18);
+  color: #ffb347;
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gate-watcher-trigger,
+  .gate-watcher-menu {
+    transition: none;
+  }
+}

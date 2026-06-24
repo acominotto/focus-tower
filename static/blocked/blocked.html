@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" data-i18n-title="meta.blockedTitle">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stay Focused — Focus Tower</title>
+    <link rel="stylesheet" href="blocked.css" />
+  </head>
+  <body>
+    <object class="scene-bg" data="test-bg.svg" type="image/svg+xml" aria-hidden="true"></object>
+
+    <main class="page">
+      <aside class="portal-stage" aria-hidden="true">
+        <div class="tower-scene">
+          <div class="dark-tower" id="dark-tower" aria-hidden="true"></div>
+
+          <p class="gate-whisper" data-i18n="blocked.gateWhisper">The eye is upon you…</p>
+        </div>
+      </aside>
+
+      <section class="card">
+        <header class="card-header">
+          <div class="badge" data-i18n="meta.extensionName">Focus Tower</div>
+          <h1 data-i18n="blocked.heading">You were headed somewhere distracting.</h1>
+        </header>
+
+        <p class="blocked-site encounter-strip">
+          <span class="label" data-i18n="blocked.blockedLabel">Blocked:</span>
+          <strong id="domain">—</strong>
+        </p>
+
+        <div class="site-time" id="site-time" hidden>
+          <p class="site-time-total" id="site-time-total"></p>
+          <p class="site-time-comparison" id="site-time-comparison"></p>
+        </div>
+
+        <blockquote class="quote lore-scroll">
+          <p id="quote-text" data-i18n="blocked.loadingQuote">Loading inspiration…</p>
+          <footer id="quote-author"></footer>
+        </blockquote>
+
+        <p class="nudge" data-i18n="blocked.nudge">
+          The tower blocks your path. Turn back before another hour falls into shadow.
+        </p>
+
+        <div class="actions quest-panel">
+          <p class="actions-label" data-i18n="blocked.actionsLabel">Need a short break? Choose wisely:</p>
+          <div class="button-row">
+            <button class="btn btn-ghost" data-minutes="5">5 minutes</button>
+            <button class="btn btn-ghost" data-minutes="10">10 minutes</button>
+            <button class="btn btn-ghost" data-minutes="30">30 minutes</button>
+          </div>
+          <button class="btn btn-session" data-session="true" data-i18n="blocked.allowSession">
+            Allow for this browser session
+          </button>
+        </div>
+
+        <button class="btn btn-primary" id="go-back" data-i18n="blocked.turnAway">Turn away from the tower</button>
+      </section>
+    </main>
+
+    <script type="module" src="blocked.js"></script>
+  </body>
+</html>

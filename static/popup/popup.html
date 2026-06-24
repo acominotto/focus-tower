@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-i18n-title="meta.popupTitle">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Focus Tower</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="popup">
+      <header>
+        <h1 data-i18n="meta.extensionName">Focus Tower</h1>
+        <p data-i18n="popup.tagline">Block distractions. Protect your time.</p>
+      </header>
+
+      <section class="panel">
+        <h2 data-i18n="popup.language">Language</h2>
+        <select id="language-select" class="language-select" aria-label="Language"></select>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2 data-i18n="popup.blockedSites">Blocked sites</h2>
+          <button id="reset-sites" type="button" class="link-btn" data-i18n="popup.resetDefaults">Reset defaults</button>
+        </div>
+
+        <form id="add-form" class="add-form">
+          <input
+            id="site-input"
+            type="text"
+            data-i18n-placeholder="popup.sitePlaceholder"
+            placeholder="e.g. twitter.com"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="submit" data-i18n="popup.block">Block</button>
+        </form>
+        <p id="error" class="error" hidden></p>
+
+        <ul id="site-list" class="site-list"></ul>
+        <p id="empty-state" class="empty" hidden data-i18n="popup.noSites">No sites blocked yet.</p>
+      </section>
+
+      <section class="panel">
+        <h2 data-i18n="popup.customQuotes">Custom quotes</h2>
+        <p class="panel-note" data-i18n="popup.quotesNote">Added to the built-in library on the block page.</p>
+
+        <form id="quote-form" class="stack-form">
+          <input
+            id="quote-text-input"
+            type="text"
+            data-i18n-placeholder="popup.quotePlaceholder"
+            placeholder="Quote text"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <input
+            id="quote-author-input"
+            type="text"
+            data-i18n-placeholder="popup.authorPlaceholder"
+            placeholder="Author (optional)"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="submit" data-i18n="popup.addQuote">Add quote</button>
+        </form>
+        <p id="quote-error" class="error" hidden></p>
+
+        <ul id="quote-list" class="quote-list"></ul>
+        <p id="quote-empty" class="empty" hidden data-i18n="popup.noQuotes">No custom quotes yet.</p>
+      </section>
+
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

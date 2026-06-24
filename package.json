@@ -1,0 +1,25 @@
+{
+  "name": "focus-tower",
+  "version": "1.1.0",
+  "description": "Chrome extension — block distracting websites with inspiring messages",
+  "type": "module",
+  "scripts": {
+    "build": "bun run scripts/build.ts",
+    "watch": "bun --watch scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "package": "bun run build && cd dist && zip -r ../focus-tower.zip .",
+    "icons": "bun run scripts/generate-icons.ts",
+    "pixel-tower": "bun run scripts/generate-pixel-tower.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grinn/focus-tower.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "^1.2.0",
+    "@types/chrome": "^0.0.268",
+    "typescript": "^5.7.3"
+  }
+}

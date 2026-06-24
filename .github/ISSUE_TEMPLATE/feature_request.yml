@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an idea for Focus Tower
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. Focus Tower is local-first and privacy-focused — features that require accounts or cloud sync are unlikely to fit.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: What problem does this solve? What workflow is awkward today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How would you like this to work?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you've thought about.
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Fit check
+      options:
+        - label: This stays local-only (no accounts or cloud sync)
+          required: false
+        - label: I'm willing to help implement this
+          required: false

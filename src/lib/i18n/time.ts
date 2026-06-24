@@ -1,0 +1,6 @@
+export const MINUTES_PER_HOUR = 60;
+export const MINUTES_PER_DAY = 1_440;
+export const MINUTES_PER_WEEK = 7 * MINUTES_PER_DAY;
+export const MINUTES_PER_MONTH = 30 * MINUTES_PER_DAY;
+export const MINUTES_PER_SIX_MONTHS = 182.5 * MINUTES_PER_DAY;
+export const MINUTES_PER_YEAR = 365 * MINUTES_PER_DAY;
