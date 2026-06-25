@@ -14,7 +14,7 @@ export const test = base.extend<{
     const userDataDir = mkdtempSync(join(tmpdir(), "focus-tower-e2e-"));
     const context = await chromium.launchPersistentContext(userDataDir, {
       channel: "chromium",
-      headless: false,
+      headless: process.env.HEADED === "1" ? false : true,
       args: [
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`,

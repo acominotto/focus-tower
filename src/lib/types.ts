@@ -26,7 +26,8 @@ export type Message =
   | { type: "GET_LANGUAGE" }
   | { type: "SET_LANGUAGE"; locale: string }
   | { type: "GET_GATE_STATUS"; domain: string }
-  | { type: "REVOKE_ALLOWANCE"; domain: string };
+  | { type: "REVOKE_ALLOWANCE"; domain: string }
+  | { type: "EXPIRE_GATE"; domain: string };
 
 export interface GateStatus {
   domain: string;

@@ -28,7 +28,7 @@ async function fetchGateStatus(domain: string): Promise<GateStatus | null> {
   return response.ok ? (response.gate ?? null) : null;
 }
 
-function createShadowHost(): { shadow: ShadowRoot; host: HTMLElement } {
+function mountShadowHost(): { shadow: ShadowRoot; host: HTMLElement } {
   const existing = document.getElementById(HOST_ID);
   if (existing?.shadowRoot) {
     return { shadow: existing.shadowRoot, host: existing };
@@ -36,12 +36,16 @@ function createShadowHost(): { shadow: ShadowRoot; host: HTMLElement } {
 
   const host = document.createElement("div");
   host.id = HOST_ID;
-  document.documentElement.appendChild(host);
+  (document.body ?? document.documentElement).appendChild(host);
   return { shadow: host.attachShadow({ mode: "closed" }), host };
 }
 
+function requestExpireGate(domain: string): void {
+  void sendMessage({ type: "EXPIRE_GATE", domain });
+}
+
 async function mountWatcher(gate: GateStatus): Promise<() => void> {
-  const { shadow, host } = createShadowHost();
+  const { shadow, host } = mountShadowHost();
   shadow.innerHTML = "";
 
   const style = document.createElement("link");
@@ -75,14 +79,25 @@ async function mountWatcher(gate: GateStatus): Promise<() => void> {
   const eyeMount = root.querySelector<HTMLElement>(".gate-watcher-eye")!;
 
   const mounted = await mountWatcherEye(eyeMount);
-  const stopEye = mounted ? useHighresTowerEye(root) : () => {};
+  const stopEye = mounted ? useHighresTowerEye(eyeMount) : () => {};
 
   let gateState = gate;
   let menuOpen = false;
+  let expiring = false;
+
+  function expireGate(): void {
+    if (expiring) {
+      return;
+    }
+    expiring = true;
+    window.clearInterval(intervalId);
+    window.clearTimeout(expiryTimeoutId);
+    requestExpireGate(gateState.domain);
+  }
 
   function updateCounter(): void {
     if (gateState.expiresAt !== null && gateState.expiresAt <= Date.now()) {
-      window.location.reload();
+      expireGate();
       return;
     }
 
@@ -140,11 +155,17 @@ async function mountWatcher(gate: GateStatus): Promise<() => void> {
   document.addEventListener("pointerdown", onDocumentPointerDown, true);
   document.addEventListener("keydown", onDocumentKeyDown, true);
 
+  let intervalId = 0;
+  let expiryTimeoutId = 0;
   updateCounter();
-  const intervalId = window.setInterval(updateCounter, 1000);
+  intervalId = window.setInterval(updateCounter, 1000);
+  if (gate.expiresAt !== null) {
+    expiryTimeoutId = window.setTimeout(expireGate, Math.max(0, gate.expiresAt - Date.now()));
+  }
 
   return () => {
     window.clearInterval(intervalId);
+    window.clearTimeout(expiryTimeoutId);
     stopEye();
     document.removeEventListener("pointerdown", onDocumentPointerDown, true);
     document.removeEventListener("keydown", onDocumentKeyDown, true);
@@ -157,22 +178,33 @@ export async function useGateWatcher(): Promise<void> {
     return;
   }
 
-  const domain = domainFromUrl(window.location.href);
-  if (!domain) {
+  const host = domainFromUrl(window.location.href);
+  if (!host) {
     return;
   }
 
   await initI18n();
 
   let cleanup: (() => void) | null = null;
+  let trackedGate: GateStatus | null = null;
 
   async function sync(): Promise<void> {
-    const gate = await fetchGateStatus(domain);
+    const gate = await fetchGateStatus(host);
     if (!gate) {
+      if (
+        trackedGate?.expiresAt !== null &&
+        trackedGate?.expiresAt !== undefined &&
+        trackedGate.expiresAt <= Date.now()
+      ) {
+        requestExpireGate(trackedGate.domain);
+      }
       cleanup?.();
       cleanup = null;
+      trackedGate = null;
       return;
     }
+
+    trackedGate = gate;
 
     if (cleanup) {
       return;

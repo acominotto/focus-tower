@@ -43,6 +43,34 @@ test.describe("blocking", () => {
     await page.close();
   });
 
+  test("returns to the gate after a dev-only 10 second break expires", async ({ context, extensionId }) => {
+    test.setTimeout(60_000);
+
+    const popup = await openPopup(context, extensionId);
+    await resetExtensionState(popup);
+    await popup.close();
+
+    const page = await context.newPage();
+    await page.goto("https://example.com", { waitUntil: "domcontentloaded" });
+    await expect(page).toHaveURL(/blocked\/blocked\.html\?domain=example\.com/);
+
+    const devBreak = page.getByRole("button", { name: "10 seconds" });
+    if ((await devBreak.count()) === 0) {
+      test.skip(true, "Dev-only break option not in build (use DEV_BUILD=1)");
+      return;
+    }
+
+    await devBreak.click();
+    await page.waitForURL("https://example.com/**", { timeout: 15_000 });
+    await expect(page.locator("#focus-tower-gate-watcher")).toBeAttached({ timeout: 15_000 });
+
+    await expect(page).toHaveURL(
+      new RegExp(`chrome-extension://${extensionId}/blocked/blocked\\.html\\?domain=example\\.com`),
+      { timeout: 20_000 },
+    );
+    await page.close();
+  });
+
   test("re-blocks after revoking allowance", async ({ context, extensionId }) => {
     const popup = await openPopup(context, extensionId);
     await resetExtensionState(popup);

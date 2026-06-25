@@ -14,3 +14,12 @@ export function domainFromUrl(url: string): string {
     return normalizeDomain(url);
   }
 }
+
+export function hostMatchesBlockedDomain(host: string, blockedDomain: string): boolean {
+  const normalizedHost = normalizeDomain(host);
+  const normalizedBlocked = normalizeDomain(blockedDomain);
+  return (
+    normalizedHost === normalizedBlocked ||
+    normalizedHost.endsWith(`.${normalizedBlocked}`)
+  );
+}

@@ -82,12 +82,38 @@ function requestGrant(durationMs: number | null, label: string): void {
   void grantAccess(durationMs, label);
 }
 
-document.querySelectorAll<HTMLButtonElement>("[data-minutes]").forEach((button) => {
+function wireBreakButton(button: HTMLButtonElement): void {
   button.addEventListener("click", () => {
+    const seconds = Number(button.dataset.seconds);
+    if (seconds) {
+      requestGrant(seconds * 1000, `${seconds} sec`);
+      return;
+    }
+
     const minutes = Number(button.dataset.minutes);
     requestGrant(minutes * 60 * 1000, `${minutes} min`);
   });
-});
+}
+
+document.querySelectorAll<HTMLButtonElement>("[data-minutes], [data-seconds]").forEach(wireBreakButton);
+
+function addDevBreakButton(): void {
+  if (!__DEV__) {
+    return;
+  }
+
+  const row = document.querySelector(".button-row");
+  if (!row) {
+    return;
+  }
+
+  const button = document.createElement("button");
+  button.className = "btn btn-ghost";
+  button.dataset.seconds = "10";
+  button.textContent = t("duration.seconds", { n: 10 });
+  row.prepend(button);
+  wireBreakButton(button);
+}
 
 document.querySelector<HTMLButtonElement>("[data-session]")?.addEventListener("click", () => {
   requestGrant(null, "session");
@@ -107,6 +133,7 @@ async function bootstrap(): Promise<void> {
   if (domainEl) domainEl.textContent = domain;
   applyDocumentI18n();
   applyBreakLabels();
+  addDevBreakButton();
   document.documentElement.lang = getCurrentLocale();
 
   await loadQuote();

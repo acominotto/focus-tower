@@ -39,7 +39,7 @@ const viewY = minY - pad;
 const viewW = maxX - minX + pad * 2;
 const viewH = maxY - minY + pad * 2;
 
-const watcherSvg = `<svg class="watcher-eye" xmlns="http://www.w3.org/2000/svg" viewBox="${viewX} ${viewY} ${viewW} ${viewH}" width="52" height="46" shape-rendering="crispEdges" aria-hidden="true">
+const watcherSvg = `<svg class="watcher-eye" xmlns="http://www.w3.org/2000/svg" viewBox="${viewX} ${viewY} ${viewW} ${viewH}" width="26" height="23" shape-rendering="crispEdges" aria-hidden="true">
   ${eyeMarkup}
 </svg>
 `;

@@ -1,11 +1,11 @@
-import { normalizeDomain } from "./lib/domains.js";
+import { domainFromUrl, hostMatchesBlockedDomain, normalizeDomain } from "./lib/domains.js";
 import { getSiteTimeInsight } from "./lib/site-time.js";
 import {
-  getAllowanceForDomain,
   getBlockedSites,
   getCustomQuotes,
   getRandomQuote,
   grantAllowance,
+  resolveAllowanceForHost,
   revokeAllowance,
   resetDefaultSites,
   seedDefaultSitesOnInstall,
@@ -24,7 +24,7 @@ import {
   type ErrorCode,
   type Locale,
 } from "./lib/i18n/index.js";
-import type { Allowances, Message, Quote, Response } from "./lib/types.js";
+import type { Allowance, Message, Quote, Response } from "./lib/types.js";
 
 function reply(sendResponse: (response: Response) => void, response: Response): void {
   sendResponse(response);
@@ -34,6 +34,65 @@ async function localizedError(code: ErrorCode): Promise<Response> {
   const locale = await getLocale();
   await initI18n(locale);
   return { ok: false, error: translateError(code) };
+}
+
+function blockedPageUrl(domain: string): string {
+  return chrome.runtime.getURL(`blocked/blocked.html?domain=${encodeURIComponent(domain)}`);
+}
+
+async function returnTabsToGate(domain: string): Promise<void> {
+  const tabs = await chrome.tabs.query({});
+  const blockedUrl = blockedPageUrl(domain);
+
+  await Promise.all(
+    tabs.map(async (tab) => {
+      if (tab.id === undefined || !tab.url?.startsWith("http")) {
+        return;
+      }
+      if (!hostMatchesBlockedDomain(domainFromUrl(tab.url), domain)) {
+        return;
+      }
+      try {
+        await chrome.tabs.update(tab.id, { url: blockedUrl });
+      } catch {
+        // Tab may have closed or be navigating.
+      }
+    }),
+  );
+}
+
+async function expireTimedAllowance(domain: string, tabId?: number): Promise<void> {
+  const normalized = normalizeDomain(domain);
+  await revokeAllowance(normalized);
+
+  if (tabId !== undefined) {
+    try {
+      await chrome.tabs.update(tabId, { url: blockedPageUrl(normalized) });
+    } catch {
+      // Fall through to query all tabs.
+    }
+  }
+
+  await returnTabsToGate(normalized);
+}
+
+async function sweepExpiredAllowances(): Promise<void> {
+  const blockedSites = await getBlockedSites();
+  const local = await chrome.storage.local.get(STORAGE_KEYS.allowances);
+  const session = await chrome.storage.session.get(STORAGE_KEYS.allowances);
+  const merged: Record<string, Allowance> = {
+    ...(local[STORAGE_KEYS.allowances] ?? {}),
+    ...(session[STORAGE_KEYS.allowances] ?? {}),
+  };
+  const now = Date.now();
+
+  for (const site of blockedSites) {
+    const allowance = merged[site];
+    if (!allowance || allowance.expiresAt === null || allowance.expiresAt > now) {
+      continue;
+    }
+    await expireTimedAllowance(site);
+  }
 }
 
 chrome.runtime.onInstalled.addListener(async (details) => {
@@ -55,21 +114,18 @@ chrome.storage.onChanged.addListener((changes) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === "allowance-sweep") {
+    await sweepExpiredAllowances();
+    return;
+  }
+
   if (!alarm.name.startsWith("allowance-")) return;
 
   const domain = alarm.name.replace("allowance-", "");
-  const local = await chrome.storage.local.get(STORAGE_KEYS.allowances);
-  const allowances: Allowances = local[STORAGE_KEYS.allowances] ?? {};
-
-  if (allowances[domain]) {
-    delete allowances[domain];
-    await chrome.storage.local.set({ [STORAGE_KEYS.allowances]: allowances });
-  }
-
-  await updateBlockingRules();
+  await expireTimedAllowance(domain);
 });
 
-chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
   const respond = (response: Response) => reply(sendResponse, response);
 
   if (message.type === "GRANT_ALLOWANCE") {
@@ -199,17 +255,13 @@ chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) =
 
   if (message.type === "GET_GATE_STATUS") {
     void (async () => {
-      const domain = normalizeDomain(message.domain);
-      const blockedSites = await getBlockedSites();
-      if (!blockedSites.includes(domain)) {
+      const host = normalizeDomain(message.domain);
+      const resolved = await resolveAllowanceForHost(host);
+      if (!resolved) {
         respond({ ok: true, gate: null });
         return;
       }
-      const allowance = await getAllowanceForDomain(domain);
-      if (!allowance) {
-        respond({ ok: true, gate: null });
-        return;
-      }
+      const { domain, allowance } = resolved;
       respond({
         ok: true,
         gate: {
@@ -232,8 +284,19 @@ chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) =
     return true;
   }
 
+  if (message.type === "EXPIRE_GATE") {
+    void (async () => {
+      const domain = normalizeDomain(message.domain);
+      await expireTimedAllowance(domain, sender.tab?.id);
+      respond({ ok: true });
+    })().catch((error: Error) => respond({ ok: false, error: error.message }));
+    return true;
+  }
+
   return false;
 });
 
 void updateBlockingRules();
 void initTabTimeTracker();
+void sweepExpiredAllowances();
+void chrome.alarms.create("allowance-sweep", { periodInMinutes: 1 });

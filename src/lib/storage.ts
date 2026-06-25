@@ -1,6 +1,6 @@
 import { DEFAULT_BLOCKED_SITES } from "../data/default-sites.js";
 import { BLOCK_RULE_ID_BASE, STORAGE_KEYS } from "./constants.js";
-import { normalizeDomain } from "./domains.js";
+import { hostMatchesBlockedDomain, normalizeDomain } from "./domains.js";
 import { DEFAULT_QUOTES, pickRandomQuote } from "./quotes.js";
 import type { Allowance, Allowances, Quote } from "./types.js";
 
@@ -42,9 +42,32 @@ export async function getRandomQuote(): Promise<Quote> {
 }
 
 export async function getAllowanceForDomain(domain: string): Promise<Allowance | null> {
-  const normalized = normalizeDomain(domain);
+  const resolved = await resolveAllowanceForHost(domain);
+  return resolved?.allowance ?? null;
+}
+
+export async function resolveAllowanceForHost(
+  host: string,
+): Promise<{ domain: string; allowance: Allowance } | null> {
+  const normalizedHost = normalizeDomain(host);
+  const blockedSites = await getBlockedSites();
   const allowances = await getAllowances();
-  return allowances[normalized] ?? null;
+
+  if (blockedSites.includes(normalizedHost) && allowances[normalizedHost]) {
+    return { domain: normalizedHost, allowance: allowances[normalizedHost] };
+  }
+
+  for (const site of blockedSites) {
+    if (!hostMatchesBlockedDomain(normalizedHost, site)) {
+      continue;
+    }
+    const allowance = allowances[site];
+    if (allowance) {
+      return { domain: site, allowance };
+    }
+  }
+
+  return null;
 }
 
 export async function revokeAllowance(domain: string): Promise<void> {

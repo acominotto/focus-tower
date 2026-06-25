@@ -14,6 +14,8 @@ function copyStatic(): void {
   writeFileSync(join(dist, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
+const isDevBuild = process.env.DEV_BUILD === "1";
+
 async function build(): Promise<void> {
   const generateWatcherEye = Bun.spawnSync(["bun", "run", join(import.meta.dir, "generate-watcher-eye.ts")], {
     cwd: root,
@@ -38,6 +40,9 @@ async function build(): Promise<void> {
     target: "browser",
     format: "esm",
     minify: false,
+    define: {
+      __DEV__: JSON.stringify(isDevBuild),
+    },
   });
 
   if (!result.success) {
