@@ -12,7 +12,7 @@ Focus Tower is a client-side Chrome extension. Install updates from the [Chrome 
 
 If you discover a security issue, please **do not** open a public GitHub issue.
 
-Instead, report it privately via [GitHub Security Advisories](https://github.com/grinn/focus-tower/security/advisories/new) (preferred) or by opening a minimal issue asking for a private contact channel.
+Instead, report it privately via [GitHub Security Advisories](https://github.com/acominotto/focus-tower/security/advisories/new) (preferred) or email [adrien.cominotto@gmail.com](mailto:adrien.cominotto@gmail.com).
 
 Include:
 

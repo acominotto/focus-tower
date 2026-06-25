@@ -5,7 +5,7 @@ Thank you for your interest in contributing! This project is open source and wel
 ## Development setup
 
 ```bash
-git clone https://github.com/grinn/focus-tower.git
+git clone https://github.com/acominotto/focus-tower.git
 cd focus-tower
 bun install
 bun run build
@@ -32,7 +32,7 @@ Keep changes focused — smaller PRs are easier to review and merge.
 
 ## Reporting issues
 
-Use the [bug report](https://github.com/grinn/focus-tower/issues/new?template=bug_report.yml) or [feature request](https://github.com/grinn/focus-tower/issues/new?template=feature_request.yml) templates so we have enough context to help.
+Use the [bug report](https://github.com/acominotto/focus-tower/issues/new?template=bug_report.yml) or [feature request](https://github.com/acominotto/focus-tower/issues/new?template=feature_request.yml) templates so we have enough context to help.
 
 ## License
 

@@ -1,9 +1,13 @@
 # Focus Tower
 
-[![CI](https://github.com/grinn/focus-tower/actions/workflows/ci.yml/badge.svg)](https://github.com/grinn/focus-tower/actions/workflows/ci.yml)
+[![CI](https://github.com/acominotto/focus-tower/actions/workflows/ci.yml/badge.svg)](https://github.com/acominotto/focus-tower/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A Chrome extension inspired by Cold Turkey — block distracting websites and show productivity quotes when you try to visit them. Built with **TypeScript**, **Bun**, and Manifest V3.
+
+**Project page:** [acominotto.github.io/focus-tower](https://acominotto.github.io/focus-tower/)
+
+**Author:** [adrien.cominotto@gmail.com](mailto:adrien.cominotto@gmail.com)
 
 ## Features
 
@@ -20,7 +24,7 @@ A Chrome extension inspired by Cold Turkey — block distracting websites and sh
 ## Install from source
 
 ```bash
-git clone https://github.com/grinn/focus-tower.git
+git clone https://github.com/acominotto/focus-tower.git
 cd focus-tower
 bun install
 bun run build      # outputs to dist/

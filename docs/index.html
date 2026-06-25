@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Focus Tower is a Chrome extension that blocks distracting websites. Meet the gate, feel the eye, and protect your time."
+    />
+    <title>Focus Tower — Block distractions. Protect your time.</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <object class="scene-bg" data="assets/test-bg.svg" type="image/svg+xml" aria-hidden="true"></object>
+
+    <main class="page">
+      <aside class="portal-stage" aria-hidden="true">
+        <div class="tower-scene">
+          <div class="dark-tower" id="dark-tower"></div>
+          <p class="gate-whisper">The eye is upon you…</p>
+        </div>
+      </aside>
+
+      <div class="card-column">
+      <section class="card">
+        <header class="card-header">
+          <div class="badge">Focus Tower</div>
+          <h1>Block distractions.<br />Protect your time.</h1>
+          <p class="tagline">A Chrome extension inspired by Cold Turkey — with a watchful tower at the gate.</p>
+        </header>
+
+        <p class="lead">
+          When your hand reaches for another tab, the tower stands in your path. Not to punish you — to
+          pause the drift and ask whether this visit is worth the hour that follows.
+        </p>
+
+        <article class="concept-block">
+          <h2>The gate</h2>
+          <p>
+            Blocked sites redirect to a gate screen: the same volcanic sky, the same dark tower, and a
+            quote that nudges you back toward what matters. You can take a timed break or turn away.
+          </p>
+        </article>
+
+        <article class="concept-block">
+          <h2>The eye</h2>
+          <p>
+            Grant yourself a short break and a small watcher appears on allowed sites — the tower’s eye
+            tracking your session until the gate closes again. The metaphor is simple: permission is
+            temporary; attention is precious.
+          </p>
+        </article>
+
+        <ul class="feature-list">
+          <li>Default block list for common distractions, fully customizable</li>
+          <li>Inspiring quotes — built-in library plus your own</li>
+          <li>Time-on-site stats with achievement comparisons</li>
+          <li>5, 10, or 30 minute breaks, or allow for the session</li>
+          <li>English, French, German, Italian, and Spanish</li>
+          <li>Local only — no accounts, no cloud sync</li>
+        </ul>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/focus-tower/PLACEHOLDER">Chrome Web Store</a>
+          <a class="btn btn-ghost" href="https://github.com/acominotto/focus-tower">View on GitHub</a>
+          <a class="btn btn-ghost" href="https://github.com/acominotto/focus-tower#install-from-source">Install from source</a>
+        </div>
+
+        <p class="footnote">
+          Move your cursor — the tower’s eye follows. That’s the whole idea.<br />
+          <a href="mailto:adrien.cominotto@gmail.com">adrien.cominotto@gmail.com</a>
+        </p>
+      </section>
+      </div>
+    </main>
+
+    <script src="tower.js"></script>
+  </body>
+</html>

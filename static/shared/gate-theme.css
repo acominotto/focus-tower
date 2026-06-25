@@ -1,0 +1,422 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Press+Start+2P&display=swap");
+
+:root {
+  --bg: #080504;
+  --card: rgba(6, 3, 3, 0.92);
+  --border: rgba(180, 45, 10, 0.55);
+  --frame: rgba(90, 28, 8, 0.85);
+  --text: #f5ebe8;
+  --muted: #9a8880;
+  --accent: #e63900;
+  --accent-bright: #ff6b35;
+  --accent-dim: rgba(230, 57, 0, 0.14);
+  --accent-glow: rgba(255, 69, 0, 0.5);
+  --void: #1a0a08;
+  --void-deep: #050202;
+  --stone: #14100e;
+  --stone-edge: #2e2620;
+  --stone-highlight: #3d342c;
+  --ember: #ff4500;
+  --lava: #c41e0a;
+  --warn: #ff8c42;
+  --danger: #ff4d4d;
+  --ash: #4a4038;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: "DM Sans", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background ── */
+
+.scene-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  border: none;
+  display: block;
+}
+
+/* ── Layout ── */
+
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  max-width: none;
+  margin: 0;
+}
+
+/* ── Dark Tower ── */
+
+.portal-stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+.tower-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 0;
+  overflow: visible;
+}
+
+.dark-tower {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+}
+
+.dark-tower svg,
+.barad-dur,
+.barad-dur-highres {
+  height: 100%;
+  width: auto;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: visible;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.5));
+  display: block;
+}
+
+.barad-dur-highres .eye-fire,
+.dark-tower .eye-fire {
+  filter: drop-shadow(0 0 4px #ff4500) drop-shadow(0 0 14px rgba(255, 90, 0, 0.55));
+}
+
+.gate-whisper {
+  position: absolute;
+  z-index: 7;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0;
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(0.52rem, 1.35vw, 0.68rem);
+  line-height: 1.8;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  text-shadow:
+    2px 2px 0 #0a0806,
+    0 0 16px var(--accent-glow);
+  white-space: nowrap;
+  opacity: 0.85;
+  animation: whisper-fade 5s ease-in-out infinite;
+}
+
+@keyframes whisper-fade {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ── Content card ── */
+
+.card {
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgba(18, 8, 6, 0.97) 0%, var(--card) 18%, var(--card) 100%);
+  border: 3px solid var(--frame);
+  border-radius: 0;
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 0 0 4px rgba(0, 0, 0, 0.55),
+    4px 4px 0 rgba(0, 0, 0, 0.65),
+    0 20px 60px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 140, 80, 0.12),
+    inset 0 -24px 48px rgba(230, 57, 0, 0.04);
+  animation: card-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.card::before {
+  top: 8px;
+  left: 8px;
+  border-top: 3px solid var(--accent-bright);
+  border-left: 3px solid var(--accent-bright);
+  box-shadow:
+    -2px -2px 8px rgba(255, 107, 53, 0.35),
+    inset 0 0 12px rgba(255, 107, 53, 0.08);
+}
+
+.card::after {
+  top: 8px;
+  right: 8px;
+  border-top: 3px solid var(--accent-bright);
+  border-right: 3px solid var(--accent-bright);
+  box-shadow: 2px -2px 8px rgba(255, 107, 53, 0.35);
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.card-header {
+  position: relative;
+  margin-bottom: 1.35rem;
+  padding-bottom: 1.1rem;
+}
+
+.card-header::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(230, 57, 0, 0.15) 0,
+    rgba(230, 57, 0, 0.15) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.card-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 107, 53, 0.55) 20%,
+    rgba(255, 140, 80, 0.85) 50%,
+    rgba(255, 107, 53, 0.55) 80%,
+    transparent
+  );
+  animation: ember-pulse 3.5s ease-in-out infinite;
+}
+
+@keyframes ember-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.58rem;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  background: linear-gradient(180deg, rgba(255, 107, 53, 0.14) 0%, var(--accent-dim) 100%);
+  border: 2px solid rgba(230, 57, 0, 0.55);
+  padding: 0.5rem 0.65rem 0.5rem 0.5rem;
+  border-radius: 0;
+  margin-bottom: 1rem;
+  box-shadow:
+    3px 3px 0 rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 140, 80, 0.2);
+}
+
+.badge::before {
+  content: "◆";
+  font-size: 0.5rem;
+  color: var(--warn);
+  text-shadow: 0 0 8px rgba(255, 140, 66, 0.65);
+  animation: badge-spark 2.4s ease-in-out infinite;
+}
+
+@keyframes badge-spark {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+h1 {
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(0.82rem, 2.2vw, 1.05rem);
+  line-height: 1.75;
+  font-weight: 700;
+  margin-bottom: 0;
+  color: var(--text);
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.85),
+    0 0 24px rgba(230, 57, 0, 0.18);
+}
+
+.btn {
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease,
+    filter 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-ghost {
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(230, 57, 0, 0.3);
+  color: var(--text);
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.5rem;
+  line-height: 1.5;
+  padding: 0.8rem 0.55rem;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+.btn-ghost:hover {
+  border-color: rgba(230, 57, 0, 0.55);
+  background: rgba(230, 57, 0, 0.1);
+  box-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.45),
+    0 0 14px rgba(230, 57, 0, 0.18);
+  transform: translate(-1px, -1px);
+}
+
+.btn-ghost:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #ff7a45, var(--accent) 45%, #8b1a00);
+  border: 2px solid rgba(255, 140, 80, 0.5);
+  color: #1a0804;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.65rem;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  padding: 0.95rem 1rem;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow:
+    3px 3px 0 rgba(0, 0, 0, 0.5),
+    0 0 28px rgba(230, 57, 0, 0.45);
+  transform: translate(-1px, -1px);
+}
+
+.btn-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 820px) {
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-rows: 42vh auto;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .portal-stage {
+    min-height: 42vh;
+    height: 42vh;
+    order: -1;
+  }
+
+  .dark-tower {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tower-scene {
+    min-height: 42vh;
+    padding-bottom: 0;
+  }
+
+  .gate-whisper {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
