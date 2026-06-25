@@ -73,6 +73,7 @@ export interface MessageCatalog {
   gate: {
     controlsLabel: string;
     restartGate: string;
+    hideEye: string;
     sessionBreak: string;
   };
   popup: {
@@ -83,6 +84,7 @@ export interface MessageCatalog {
     sitePlaceholder: string;
     block: string;
     noSites: string;
+    showGateWatcher: string;
     customQuotes: string;
     quotesNote: string;
     quotePlaceholder: string;

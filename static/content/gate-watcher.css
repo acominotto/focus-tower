@@ -1,8 +1,6 @@
 :host {
   all: initial;
   position: fixed;
-  right: 1rem;
-  bottom: 1rem;
   z-index: 2147483647;
   display: block;
   width: 0;
@@ -19,12 +17,19 @@
 
 .gate-watcher {
   position: fixed;
-  right: 1rem;
-  bottom: 1rem;
   z-index: 2147483646;
   font-family: "Press Start 2P", "Courier New", monospace;
   color: #f5e6d3;
   pointer-events: auto;
+}
+
+.gate-watcher:not([data-positioned]) {
+  right: 1rem;
+  bottom: 1rem;
+}
+
+.gate-watcher.is-dragging {
+  user-select: none;
 }
 
 .gate-watcher-trigger {
@@ -38,7 +43,8 @@
   box-shadow:
     0 4px 14px rgba(0, 0, 0, 0.45),
     0 0 9px rgba(230, 57, 0, 0.18);
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
   transition:
     border-color 120ms ease,
     box-shadow 120ms ease,
@@ -54,7 +60,12 @@
   outline: none;
 }
 
+.gate-watcher-trigger.is-dragging,
 .gate-watcher-trigger:active {
+  cursor: grabbing;
+}
+
+.gate-watcher-trigger:active:not(.is-dragging) {
   transform: translateY(1px);
 }
 
@@ -142,7 +153,7 @@
   position: absolute;
   right: 0;
   bottom: calc(100% + 0.275rem);
-  min-width: 5.5rem;
+  min-width: 7.5rem;
   padding: 0.175rem;
   border: 1px solid rgba(230, 57, 0, 0.45);
   border-radius: 6px;

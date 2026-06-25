@@ -24,6 +24,7 @@ export const fr: MessageCatalog = {
   gate: {
     controlsLabel: "Contrôles du portail Focus Tower",
     restartGate: "Recommencer le portail",
+    hideEye: "Masquer l'œil",
     sessionBreak: "Session",
   },
   popup: {
@@ -34,6 +35,7 @@ export const fr: MessageCatalog = {
     sitePlaceholder: "ex. twitter.com",
     block: "Bloquer",
     noSites: "Aucun site bloqué pour l'instant.",
+    showGateWatcher: "Afficher l'œil sur {domain}",
     customQuotes: "Citations personnalisées",
     quotesNote: "Ajoutées à la bibliothèque intégrée sur la page de blocage.",
     quotePlaceholder: "Texte de la citation",

@@ -1,4 +1,6 @@
 import { sendMessage } from "../lib/messaging.js";
+import { domainFromUrl } from "../lib/domains.js";
+import { getGateWatcherLayout, patchGateWatcherLayout } from "../lib/gate-watcher-layout.js";
 import {
   applyDocumentI18n,
   getCurrentLocale,
@@ -24,6 +26,8 @@ const quoteAuthor = document.getElementById("quote-author-input") as HTMLInputEl
 const quoteError = document.getElementById("quote-error");
 const resetSitesBtn = document.getElementById("reset-sites");
 const languageSelect = document.getElementById("language-select") as HTMLSelectElement;
+const gateWatcherRestore = document.getElementById("gate-watcher-restore");
+const showGateWatcherBtn = document.getElementById("show-gate-watcher");
 
 function showError(message: string): void {
   if (!errorEl) return;
@@ -121,6 +125,33 @@ function renderQuotes(quotes: Quote[]): void {
   });
 }
 
+async function syncGateWatcherRestore(): Promise<void> {
+  if (!gateWatcherRestore || !showGateWatcherBtn) {
+    return;
+  }
+
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const url = tab?.url;
+  if (!url?.startsWith("http")) {
+    gateWatcherRestore.hidden = true;
+    return;
+  }
+
+  const host = domainFromUrl(url);
+  const layout = await getGateWatcherLayout(host);
+  if (!layout.hidden) {
+    gateWatcherRestore.hidden = true;
+    return;
+  }
+
+  gateWatcherRestore.hidden = false;
+  showGateWatcherBtn.textContent = t("popup.showGateWatcher", { domain: host });
+  showGateWatcherBtn.onclick = async () => {
+    await patchGateWatcherLayout(host, { hidden: false });
+    gateWatcherRestore.hidden = true;
+  };
+}
+
 async function loadSites(): Promise<void> {
   const response = await sendMessage<Response & { sites?: string[] }>({ type: "GET_BLOCKED_SITES" });
   renderSites(response.ok ? (response.sites ?? []) : []);
@@ -203,6 +234,7 @@ async function bootstrap(): Promise<void> {
   renderLanguageOptions(locale);
   await loadSites();
   await loadQuotes();
+  await syncGateWatcherRestore();
 }
 
 void bootstrap();

@@ -23,6 +23,7 @@ export const en: MessageCatalog = {
   gate: {
     controlsLabel: "Focus Tower gate controls",
     restartGate: "Restart the gate",
+    hideEye: "Hide the eye",
     sessionBreak: "Session",
   },
   popup: {
@@ -33,6 +34,7 @@ export const en: MessageCatalog = {
     sitePlaceholder: "e.g. twitter.com",
     block: "Block",
     noSites: "No sites blocked yet.",
+    showGateWatcher: "Show gate watcher on {domain}",
     customQuotes: "Custom quotes",
     quotesNote: "Added to the built-in library on the block page.",
     quotePlaceholder: "Quote text",

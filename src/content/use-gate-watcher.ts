@@ -1,10 +1,17 @@
 import { useHighresTowerEye } from "../blocked/use-highres-tower-eye.js";
 import { formatGateCounter } from "../lib/gate-counter.js";
-import { domainFromUrl } from "../lib/domains.js";
+import { domainFromUrl, normalizeDomain } from "../lib/domains.js";
+import {
+  getGateWatcherLayout,
+  patchGateWatcherLayout,
+  type GateWatcherLayout,
+} from "../lib/gate-watcher-layout.js";
 import { initI18n, t } from "../lib/i18n/index.js";
 import { sendMessage } from "../lib/messaging.js";
 import { STORAGE_KEYS } from "../lib/constants.js";
 import type { GateStatus, Response } from "../lib/types.js";
+import { useGateExpiry } from "./use-gate-expiry.js";
+import { useGateWatcherDrag } from "./use-gate-watcher-drag.js";
 import { mountWatcherEye } from "./watcher-eye.js";
 
 const HOST_ID = "focus-tower-gate-watcher";
@@ -44,8 +51,21 @@ function requestExpireGate(domain: string): void {
   void sendMessage({ type: "EXPIRE_GATE", domain });
 }
 
-async function mountWatcher(gate: GateStatus): Promise<() => void> {
+async function mountWatcher(
+  gate: GateStatus,
+  siteKey: string,
+  layout: GateWatcherLayout,
+): Promise<() => void> {
+  const stopExpiry = useGateExpiry(gate, () => {
+    requestExpireGate(gate.domain);
+  });
+
+  if (layout.hidden) {
+    return stopExpiry;
+  }
+
   const { shadow, host } = mountShadowHost();
+  host.hidden = false;
   shadow.innerHTML = "";
 
   const style = document.createElement("link");
@@ -67,7 +87,8 @@ async function mountWatcher(gate: GateStatus): Promise<() => void> {
       <span class="gate-watcher-eye" aria-hidden="true"></span>
     </button>
     <div class="gate-watcher-menu" role="menu" hidden>
-      <button type="button" role="menuitem">${t("gate.restartGate")}</button>
+      <button type="button" role="menuitem" data-action="restart">${t("gate.restartGate")}</button>
+      <button type="button" role="menuitem" data-action="hide">${t("gate.hideEye")}</button>
     </div>
   `;
   shadow.appendChild(root);
@@ -75,7 +96,8 @@ async function mountWatcher(gate: GateStatus): Promise<() => void> {
   const trigger = root.querySelector<HTMLButtonElement>(".gate-watcher-trigger")!;
   const counter = root.querySelector<HTMLElement>(".gate-watcher-counter")!;
   const menu = root.querySelector<HTMLElement>(".gate-watcher-menu")!;
-  const restartButton = menu.querySelector<HTMLButtonElement>("button")!;
+  const restartButton = menu.querySelector<HTMLButtonElement>('[data-action="restart"]')!;
+  const hideButton = menu.querySelector<HTMLButtonElement>('[data-action="hide"]')!;
   const eyeMount = root.querySelector<HTMLElement>(".gate-watcher-eye")!;
 
   const mounted = await mountWatcherEye(eyeMount);
@@ -83,24 +105,8 @@ async function mountWatcher(gate: GateStatus): Promise<() => void> {
 
   let gateState = gate;
   let menuOpen = false;
-  let expiring = false;
-
-  function expireGate(): void {
-    if (expiring) {
-      return;
-    }
-    expiring = true;
-    window.clearInterval(intervalId);
-    window.clearTimeout(expiryTimeoutId);
-    requestExpireGate(gateState.domain);
-  }
 
   function updateCounter(): void {
-    if (gateState.expiresAt !== null && gateState.expiresAt <= Date.now()) {
-      expireGate();
-      return;
-    }
-
     if (gateState.expiresAt === null) {
       counter.textContent = `${t("gate.sessionBreak")} ${formatGateCounter(null, gateState.grantedAt)}`;
       return;
@@ -129,6 +135,11 @@ async function mountWatcher(gate: GateStatus): Promise<() => void> {
     window.location.reload();
   }
 
+  async function hideEye(): Promise<void> {
+    setMenuOpen(false);
+    await patchGateWatcherLayout(siteKey, { hidden: true });
+  }
+
   function onDocumentPointerDown(event: MouseEvent): void {
     if (!menuOpen) {
       return;
@@ -144,29 +155,35 @@ async function mountWatcher(gate: GateStatus): Promise<() => void> {
     }
   }
 
-  trigger.addEventListener("click", () => {
-    setMenuOpen(!menuOpen);
+  const stopDrag = useGateWatcherDrag({
+    shell: root,
+    siteKey,
+    trigger,
+    layout,
+    onTap: () => {
+      setMenuOpen(!menuOpen);
+    },
   });
 
   restartButton.addEventListener("click", () => {
     void restartGate();
   });
 
+  hideButton.addEventListener("click", () => {
+    void hideEye();
+  });
+
   document.addEventListener("pointerdown", onDocumentPointerDown, true);
   document.addEventListener("keydown", onDocumentKeyDown, true);
 
-  let intervalId = 0;
-  let expiryTimeoutId = 0;
+  const intervalId = window.setInterval(updateCounter, 1000);
   updateCounter();
-  intervalId = window.setInterval(updateCounter, 1000);
-  if (gate.expiresAt !== null) {
-    expiryTimeoutId = window.setTimeout(expireGate, Math.max(0, gate.expiresAt - Date.now()));
-  }
 
   return () => {
     window.clearInterval(intervalId);
-    window.clearTimeout(expiryTimeoutId);
+    stopDrag();
     stopEye();
+    stopExpiry();
     document.removeEventListener("pointerdown", onDocumentPointerDown, true);
     document.removeEventListener("keydown", onDocumentKeyDown, true);
     document.getElementById(HOST_ID)?.remove();
@@ -178,8 +195,8 @@ export async function useGateWatcher(): Promise<void> {
     return;
   }
 
-  const host = domainFromUrl(window.location.href);
-  if (!host) {
+  const siteKey = domainFromUrl(window.location.href);
+  if (!siteKey) {
     return;
   }
 
@@ -188,8 +205,19 @@ export async function useGateWatcher(): Promise<void> {
   let cleanup: (() => void) | null = null;
   let trackedGate: GateStatus | null = null;
 
+  async function remountWatcher(): Promise<void> {
+    if (!trackedGate) {
+      return;
+    }
+
+    cleanup?.();
+    cleanup = null;
+    const layout = await getGateWatcherLayout(siteKey);
+    cleanup = await mountWatcher(trackedGate, siteKey, layout);
+  }
+
   async function sync(): Promise<void> {
-    const gate = await fetchGateStatus(host);
+    const gate = await fetchGateStatus(siteKey);
     if (!gate) {
       if (
         trackedGate?.expiresAt !== null &&
@@ -210,7 +238,8 @@ export async function useGateWatcher(): Promise<void> {
       return;
     }
 
-    cleanup = await mountWatcher(gate);
+    const layout = await getGateWatcherLayout(siteKey);
+    cleanup = await mountWatcher(gate, siteKey, layout);
   }
 
   await sync();
@@ -219,6 +248,18 @@ export async function useGateWatcher(): Promise<void> {
     if (areaName !== "local" && areaName !== "session") {
       return;
     }
+
+    if (changes[STORAGE_KEYS.gateWatcherLayouts] && trackedGate) {
+      const key = normalizeDomain(siteKey);
+      const change = changes[STORAGE_KEYS.gateWatcherLayouts];
+      const oldLayout = (change.oldValue as Record<string, GateWatcherLayout> | undefined)?.[key];
+      const newLayout = (change.newValue as Record<string, GateWatcherLayout> | undefined)?.[key];
+      if (oldLayout?.hidden !== newLayout?.hidden) {
+        void remountWatcher();
+      }
+      return;
+    }
+
     if (!changes[STORAGE_KEYS.allowances] && !changes[STORAGE_KEYS.blockedSites]) {
       return;
     }

@@ -5,6 +5,7 @@ export const STORAGE_KEYS = {
   siteTimeTotals: "siteTimeTotals",
   trackingSession: "trackingSession",
   language: "language",
+  gateWatcherLayouts: "gateWatcherLayouts",
 } as const;
 
 export const BLOCK_RULE_ID_BASE = 1000;
