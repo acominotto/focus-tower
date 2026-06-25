@@ -16,7 +16,8 @@
     "package": "bun run build && cd dist && zip -r ../focus-tower.zip .",
     "icons": "bun run scripts/generate-icons.ts",
     "pixel-tower": "bun run scripts/generate-pixel-tower.ts",
-    "watcher-eye": "bun run scripts/generate-watcher-eye.ts"
+    "watcher-eye": "bun run scripts/generate-watcher-eye.ts",
+    "store-assets": "bun run scripts/generate-store-assets.ts"
   },
   "repository": {
     "type": "git",

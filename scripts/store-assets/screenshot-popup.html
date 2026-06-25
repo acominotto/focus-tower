@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        width: 1280px;
+        height: 800px;
+        overflow: hidden;
+        font-family: "DM Sans", system-ui, sans-serif;
+        color: #f5ebe8;
+        background:
+          radial-gradient(ellipse 55% 70% at 18% 50%, rgba(230, 57, 0, 0.28) 0%, transparent 58%),
+          radial-gradient(ellipse 45% 55% at 82% 40%, rgba(255, 107, 53, 0.14) 0%, transparent 55%),
+          linear-gradient(135deg, #1a0f0c 0%, #120806 45%, #080504 100%);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 460px;
+        gap: 2.5rem;
+        align-items: center;
+        height: 100%;
+        padding: 0 4.5rem 0 5rem;
+      }
+
+      .copy .eye {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 1.75rem;
+        image-rendering: pixelated;
+        filter: drop-shadow(0 0 28px rgba(255, 107, 53, 0.55));
+      }
+
+      .copy h2 {
+        font-size: 2.75rem;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.85rem;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45);
+      }
+
+      .copy p {
+        font-size: 1.35rem;
+        line-height: 1.45;
+        color: #c9b8b0;
+        max-width: 22ch;
+      }
+
+      .chrome {
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(230, 57, 0, 0.35);
+        box-shadow:
+          0 28px 64px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(255, 140, 66, 0.1),
+          inset 0 1px 0 rgba(255, 140, 66, 0.06);
+        background: #14100e;
+      }
+
+      .chrome-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: #1a1412;
+        border-bottom: 1px solid rgba(230, 57, 0, 0.22);
+      }
+
+      .dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #4a4038;
+      }
+
+      .chrome-title {
+        margin-left: 0.4rem;
+        font-size: 0.8rem;
+        color: #9a8880;
+      }
+
+      .popup-shot {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: #080504;
+      }
+    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="layout">
+      <div class="copy">
+        <img class="eye" src="../../icons/icon128.png" width="96" height="96" alt="" />
+        <h2>Manage your block list</h2>
+        <p>Add sites, custom quotes, and language.</p>
+      </div>
+      <div class="chrome">
+        <div class="chrome-bar">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="chrome-title">Focus Tower</span>
+        </div>
+        <img class="popup-shot" id="popup-shot" src="popup-capture.png" alt="" />
+      </div>
+    </div>
+  </body>
+</html>

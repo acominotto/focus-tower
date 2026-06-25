@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Privacy policy for Focus Tower, a local-first Chrome extension that blocks distracting websites."
+    />
+    <title>Privacy Policy — Focus Tower</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body class="legal-page">
+    <main class="page legal-layout">
+      <section class="card legal-card">
+        <header class="card-header">
+          <div class="badge">Focus Tower</div>
+          <h1>Privacy Policy</h1>
+          <p class="tagline">Last updated: June 25, 2026</p>
+        </header>
+
+        <div class="legal-body">
+          <p class="lead">
+            Focus Tower is a local-first Chrome extension. We do not operate
+            servers, accounts, or analytics. Your settings and usage stats stay
+            on your device.
+          </p>
+
+          <article class="legal-section">
+            <h2>Summary</h2>
+            <ul>
+              <li>No personal information is collected by the developer.</li>
+              <li>No data is transmitted to us or to third-party services.</li>
+              <li>
+                All extension data is stored locally in your browser via
+                Chrome’s storage APIs.
+              </li>
+            </ul>
+          </article>
+
+          <article class="legal-section">
+            <h2>Data stored on your device</h2>
+            <p>
+              To work as intended, Focus Tower saves the following information
+              locally in
+              <code>chrome.storage.local</code> or
+              <code>chrome.storage.session</code>:
+            </p>
+            <ul>
+              <li>Your block list (domains you choose to block)</li>
+              <li>Temporary allowances and break timers</li>
+              <li>Custom motivational quotes you add</li>
+              <li>
+                Time spent on blocked sites (aggregated per domain, for
+                in-extension stats)
+              </li>
+              <li>Your language preference</li>
+              <li>On-screen position of the gate watcher eye (per site)</li>
+            </ul>
+            <p>
+              This data is used only to provide blocking, breaks, stats, and UI
+              preferences inside the extension. It never leaves your browser
+              through Focus Tower.
+            </p>
+          </article>
+
+          <article class="legal-section">
+            <h2>Permissions</h2>
+            <p>
+              Focus Tower requests Chrome permissions solely to deliver its
+              features:
+            </p>
+            <ul>
+              <li>
+                <strong>Host access (&lt;all_urls&gt;)</strong> — to redirect
+                blocked sites to the gate page and show the watcher on allowed
+                visits
+              </li>
+              <li>
+                <strong>Storage</strong> — to save your settings and stats
+                locally
+              </li>
+              <li>
+                <strong>Declarative Net Request</strong> — to block configured
+                domains
+              </li>
+              <li>
+                <strong>Tabs and windows</strong> — to track active browsing for
+                time-on-site stats
+              </li>
+              <li>
+                <strong>Alarms</strong> — to expire timed breaks automatically
+              </li>
+            </ul>
+            <p>
+              Browsing activity is processed on your device only. We do not
+              receive URLs, page content, or browsing history.
+            </p>
+          </article>
+
+          <article class="legal-section">
+            <h2>Third parties</h2>
+            <p>
+              Focus Tower does not include advertising, analytics, or social
+              trackers. It does not sell or share data with third parties. The
+              project website may load fonts from Google Fonts; that is separate
+              from the extension itself.
+            </p>
+          </article>
+
+          <article class="legal-section">
+            <h2>Children</h2>
+            <p>
+              Focus Tower is not directed at children under 13, and we do not
+              knowingly collect personal information from anyone.
+            </p>
+          </article>
+
+          <article class="legal-section">
+            <h2>Deleting your data</h2>
+            <p>
+              Uninstalling the extension removes its local storage. You can also
+              clear extension data from Chrome’s extension settings or by
+              resetting the extension from its popup.
+            </p>
+          </article>
+
+          <article class="legal-section">
+            <h2>Changes</h2>
+            <p>
+              We may update this policy if the extension’s behavior changes. The
+              “Last updated” date at the top will reflect any revision.
+            </p>
+          </article>
+
+          <article class="legal-section">
+            <h2>Contact</h2>
+            <p>
+              Questions about privacy:
+              <a href="mailto:adrien.cominotto@gmail.com"
+                >adrien.cominotto@gmail.com</a
+              >
+            </p>
+          </article>
+        </div>
+
+        <div class="actions">
+          <a class="btn btn-ghost" href="./">Back to home</a>
+          <a
+            class="btn btn-ghost"
+            href="https://github.com/acominotto/focus-tower"
+            >View on GitHub</a
+          >
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

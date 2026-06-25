@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: transparent;
+        overflow: hidden;
+      }
+
+      .dark-tower {
+        display: inline-block;
+        line-height: 0;
+      }
+
+      .dark-tower svg,
+      .barad-dur-highres {
+        width: var(--tower-width, 960px);
+        height: auto;
+        display: block;
+        overflow: visible;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+
+      /* Match gate-theme.css — this is what makes the tower eye glow on the block page */
+      .barad-dur-highres .eye-fire,
+      .dark-tower .eye-fire {
+        filter: drop-shadow(0 0 4px #ff4500) drop-shadow(0 0 14px rgba(255, 90, 0, 0.55));
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dark-tower" id="tower"></div>
+  </body>
+</html>

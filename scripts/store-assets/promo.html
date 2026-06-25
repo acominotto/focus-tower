@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        font-family: "DM Sans", system-ui, sans-serif;
+        color: #f5ebe8;
+        background: #080504;
+      }
+
+      .canvas {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background:
+          radial-gradient(ellipse 80% 60% at 72% 88%, rgba(230, 57, 0, 0.45) 0%, transparent 55%),
+          radial-gradient(ellipse 55% 45% at 18% 22%, rgba(196, 30, 10, 0.35) 0%, transparent 60%),
+          linear-gradient(165deg, #120806 0%, #080504 42%, #050302 100%);
+      }
+
+      .embers {
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(circle at 12% 78%, rgba(255, 107, 53, 0.18) 0 2px, transparent 3px),
+          radial-gradient(circle at 88% 24%, rgba(255, 140, 66, 0.14) 0 2px, transparent 3px),
+          radial-gradient(circle at 64% 12%, rgba(255, 69, 0, 0.12) 0 1px, transparent 2px),
+          radial-gradient(circle at 34% 42%, rgba(255, 77, 77, 0.1) 0 1px, transparent 2px);
+        opacity: 0.9;
+      }
+
+      .eye-glow {
+        position: absolute;
+        right: 4%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 42%;
+        aspect-ratio: 1;
+        background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.42) 0%, transparent 68%);
+        pointer-events: none;
+      }
+
+      .eye {
+        position: absolute;
+        right: 8%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: auto;
+        height: 46%;
+        aspect-ratio: 1;
+        image-rendering: pixelated;
+        filter: drop-shadow(0 0 32px rgba(255, 107, 53, 0.5));
+      }
+
+      .tower-stage {
+        display: none;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 54%;
+        height: 90%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .tower-stage .dark-tower {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        overflow: visible;
+      }
+
+      .tower-stage svg,
+      .tower-stage .barad-dur-highres {
+        width: auto;
+        height: 100%;
+        max-height: 100%;
+        max-width: 100%;
+        display: block;
+        overflow: visible;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+
+      .tower-stage .eye-fire {
+        filter: drop-shadow(0 0 4px #ff4500) drop-shadow(0 0 14px rgba(255, 90, 0, 0.55));
+      }
+
+      .tower-glow {
+        display: none;
+      }
+
+      .content {
+        position: absolute;
+        left: 7%;
+        top: 50%;
+        transform: translateY(-50%);
+        max-width: 58%;
+        z-index: 2;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-bottom: 0.55em;
+        padding: 0.35em 0.7em;
+        font-family: "Press Start 2P", monospace;
+        font-size: clamp(7px, 1.4vw, 11px);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #ff8c42;
+        border: 1px solid rgba(255, 140, 66, 0.45);
+        background: rgba(255, 69, 0, 0.12);
+      }
+
+      h1 {
+        font-size: clamp(22px, 5.2vw, 54px);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.35em;
+        text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+      }
+
+      p {
+        font-size: clamp(11px, 2.1vw, 22px);
+        line-height: 1.45;
+        color: #c9b8b0;
+        max-width: 34ch;
+      }
+
+      .marquee .eye,
+      .marquee .eye-glow {
+        display: none;
+      }
+
+      .marquee .tower-stage {
+        display: block;
+      }
+
+      .marquee .content {
+        max-width: 52%;
+      }
+
+      .marquee h1 {
+        font-size: clamp(28px, 4.8vw, 64px);
+      }
+
+      .marquee p {
+        font-size: clamp(13px, 1.9vw, 24px);
+        max-width: 38ch;
+      }
+    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="canvas" id="canvas">
+      <div class="embers"></div>
+      <div class="eye-glow"></div>
+      <div class="tower-stage">
+        <div class="dark-tower"><!-- TOWER_INJECT --></div>
+      </div>
+      <img class="eye" id="eye" src="../../icons/icon128.png" width="128" height="128" alt="" />
+      <div class="content">
+        <div class="badge">Chrome extension</div>
+        <h1>Focus Tower</h1>
+        <p>Block distractions. Protect your time.</p>
+      </div>
+    </div>
+    <script>
+      const variant = new URLSearchParams(location.search).get("variant") ?? "small";
+      if (variant === "marquee") {
+        document.getElementById("canvas").classList.add("marquee");
+      }
+    </script>
+  </body>
+</html>

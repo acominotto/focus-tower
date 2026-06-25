@@ -111,3 +111,65 @@
     max-height: none;
   }
 }
+
+/* ── Legal pages (privacy policy, etc.) ── */
+
+.legal-page {
+  overflow-y: auto;
+}
+
+.legal-layout {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+  padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.75rem);
+}
+
+.legal-card {
+  width: min(42rem, 100%);
+  max-height: none;
+  margin: 0;
+}
+
+.legal-body {
+  margin-bottom: 1.5rem;
+}
+
+.legal-section {
+  margin-bottom: 1.35rem;
+}
+
+.legal-section h2 {
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(0.58rem, 1.5vw, 0.68rem);
+  line-height: 1.7;
+  color: var(--accent-bright);
+  margin-bottom: 0.55rem;
+}
+
+.legal-section p,
+.legal-section li {
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.legal-section p {
+  margin-bottom: 0.75rem;
+}
+
+.legal-section ul {
+  margin: 0 0 0.75rem 1.1rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.legal-section li::marker {
+  color: var(--warn);
+}
+
+.legal-section code {
+  font-size: 0.9em;
+  color: var(--text);
+}
