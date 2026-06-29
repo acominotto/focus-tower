@@ -5,9 +5,11 @@ on:
     branches: [main, master]
     paths:
       - "docs/**"
+      - "icons/**"
       - "static/shared/**"
       - "static/blocked/test-bg.svg"
       - "static/blocked/test.svg"
+      - "scripts/generate-icons.ts"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
