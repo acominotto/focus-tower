@@ -1,6 +1,11 @@
 .DS_Store
 node_modules/
 dist/
+.turbo/
 test-results/
 playwright-report/
 focus-tower.zip
+apps/chrome/focus-tower.zip
+apps/mobile/.expo/
+apps/mobile/ios/
+apps/mobile/android/

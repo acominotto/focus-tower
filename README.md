@@ -3,23 +3,48 @@
 [![CI](https://github.com/acominotto/focus-tower/actions/workflows/ci.yml/badge.svg)](https://github.com/acominotto/focus-tower/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A Chrome extension inspired by Cold Turkey — block distracting websites and show productivity quotes when you try to visit them. Built with **TypeScript**, **Bun**, and Manifest V3.
+A monorepo for **Focus Tower** — block distractions with inspiring messages. The Chrome extension blocks websites; the mobile app blocks apps via Screen Time (iOS) and an accessibility shield (Android). Built with **TypeScript**, **Bun**, **Turborepo**, and **Expo**.
 
 **Project page:** [acominotto.github.io/focus-tower](https://acominotto.github.io/focus-tower/)
 
 **Author:** [adrien.cominotto@gmail.com](mailto:adrien.cominotto@gmail.com)
 
+## Monorepo layout
+
+```
+focus-guard/
+├── apps/
+│   ├── chrome/          # Chrome MV3 extension
+│   └── mobile/          # Expo dev-client app (iOS + Android)
+├── packages/
+│   ├── core/            # Shared block logic, i18n, quotes
+│   └── native-screen-time/  # Screen Time + Android shield native module
+├── turbo.json
+└── docs/
+```
+
 ## Features
+
+### Chrome extension
 
 - **Default block list** — common distractions (Facebook, Reddit, YouTube, etc.) on first install
 - **Custom block list** — add or remove domains from the popup
 - **Inspiring block page** — random quote from built-in + your custom quotes, with a watchful tower theme
 - **Achievement comparisons** — see what famous people accomplished in the time you've spent on a site
 - **Floating gate watcher** — when you take a timed break, a small tower eye tracks your session on allowed sites
-- **Custom quotes** — add your own messages in the popup
 - **Temporary access** — 1, 5, 10, or 30 minute breaks, or allow for the browser session; re-blocks automatically
+
+### Mobile app
+
+- **App blocking** — pick distracting apps via system picker (iOS) or installed-apps list (Android)
+- **ScreenZen-style shields** — system overlay with quotes and break options
+- **Timed allowances** — temporary unlock with automatic re-lock
+- **Shared quotes & i18n** — same motivational content as the extension
+
+### All platforms
+
 - **Multilingual UI** — English, French, German, Italian, and Spanish
-- **Local only** — no accounts, no cloud sync
+- **Local only** — no accounts, no cloud sync, no analytics
 
 ## Install from source
 
@@ -27,19 +52,24 @@ A Chrome extension inspired by Cold Turkey — block distracting websites and sh
 git clone https://github.com/acominotto/focus-tower.git
 cd focus-tower
 bun install
-bun run build      # outputs to dist/
-bun run watch      # rebuild on changes
-bun run typecheck  # optional TypeScript check
+bun run build           # build all packages; extension → apps/chrome/dist/
+bun run watch           # watch chrome extension
+bun run typecheck
+bun test
 ```
 
-### Load in Chrome
+### Load Chrome extension
 
-1. Run `bun run build`
+1. Run `bun run build` (or `cd apps/chrome && bun run build`)
 2. Open `chrome://extensions`
 3. Enable **Developer mode**
 4. Click **Load unpacked**
-5. Select the **`dist/`** folder (not the repo root)
+5. Select **`apps/chrome/dist/`**
 6. After code changes, click **Reload** on the extension card
+
+### Mobile app
+
+See [apps/mobile/README.md](apps/mobile/README.md) for Expo dev-client setup, iOS entitlements, and Android accessibility steps.
 
 ## Usage
 
@@ -65,18 +95,22 @@ When visiting a blocked site:
 
 ```
 focus-tower/
-├── src/
-│   ├── background.ts           # Service worker
-│   ├── blocked/                # Block page logic
-│   ├── content/                # Gate watcher content script
-│   ├── popup/                  # Popup UI logic
-│   ├── lib/                    # Shared modules
-│   └── data/default-sites.ts   # Default block list
-├── static/                     # HTML & CSS (copied to dist/)
-├── icons/
-├── scripts/build.ts            # Bun bundler
-├── manifest.json
-└── dist/                       # Load this folder in Chrome
+├── apps/
+│   ├── chrome/
+│   │   ├── src/
+│   │   │   ├── adapters/       # Chrome storage, DNR, block service
+│   │   │   ├── background.ts
+│   │   │   ├── blocked/
+│   │   │   ├── content/
+│   │   │   ├── popup/
+│   │   │   └── lib/            # Chrome-only (messaging, tab tracker)
+│   │   ├── static/
+│   │   └── manifest.json
+│   └── mobile/                 # Expo app
+├── packages/
+│   └── core/                   # Shared TypeScript
+├── turbo.json
+└── docs/
 ```
 
 ## Default blocked sites

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="accessibility_service_description">Focus Tower uses accessibility to detect when you open a blocked app and show the focus shield.</string>
+</resources>

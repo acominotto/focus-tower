@@ -13,7 +13,7 @@ bun test
 bun run typecheck
 ```
 
-Load the `dist/` folder as an unpacked extension in `chrome://extensions` (Developer mode).
+Load the `apps/chrome/dist/` folder as an unpacked extension in `chrome://extensions` (Developer mode).
 
 ## Pull requests
 

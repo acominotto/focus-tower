@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android"],
+  "ios": {
+    "modules": ["FocusTowerScreenTimeModule"]
+  },
+  "android": {
+    "modules": ["com.focustower.screentime.FocusTowerScreenTimeModule"]
+  }
+}

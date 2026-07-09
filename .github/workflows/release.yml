@@ -47,8 +47,8 @@ jobs:
       - name: Set manifest version
         run: |
           VERSION="${{ steps.version.outputs.value }}"
-          jq --arg v "$VERSION" '.version = $v' manifest.json > manifest.tmp
-          mv manifest.tmp manifest.json
+          jq --arg v "$VERSION" '.version = $v' apps/chrome/manifest.json > manifest.tmp
+          mv manifest.tmp apps/chrome/manifest.json
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -64,8 +64,8 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.value }}"
           ARTIFACT="focus-tower-${VERSION}.zip"
-          cd dist
-          zip -r "../${ARTIFACT}" .
+          cd apps/chrome/dist
+          zip -r "../../../${ARTIFACT}" .
           echo "artifact_name=${ARTIFACT}" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
