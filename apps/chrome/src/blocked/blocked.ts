@@ -170,8 +170,9 @@ async function bootstrap(): Promise<void> {
   addDevBreakButton();
   document.documentElement.lang = getCurrentLocale();
 
-  await loadQuote();
-  await loadSiteTime();
+  // Data loads talk to the service worker; never let one failing block the
+  // rest of the page (quote, insight, and the tower are independent).
+  await Promise.allSettled([loadQuote(), loadSiteTime()]);
 
   const darkTower = document.getElementById("dark-tower");
   if (darkTower) {

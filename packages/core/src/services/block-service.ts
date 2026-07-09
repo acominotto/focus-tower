@@ -63,6 +63,36 @@ export function createBlockService(deps: BlockServiceDeps) {
     await enforcement.syncBlockedTargets(blocked, allowances);
   }
 
+  // Defined as closures (not `this`-bound object methods) so they keep working
+  // when the caller destructures them off the service, as the extension
+  // background does — otherwise `this` is undefined and the call throws.
+  async function getCustomQuotes(): Promise<Quote[]> {
+    const data = await storage.local.get(STORAGE_KEYS.customQuotes);
+    return (data[STORAGE_KEYS.customQuotes] as Quote[] | undefined) ?? [];
+  }
+
+  async function getAllQuotes(): Promise<Quote[]> {
+    return [...DEFAULT_QUOTES, ...(await getCustomQuotes())];
+  }
+
+  async function resolveAllowanceForHost(host: string) {
+    const normalizedHost = normalizeDomain(host);
+    const blockedSites = await getBlockedSites();
+    const allowances = await getAllowances();
+
+    if (blockedSites.includes(normalizedHost) && allowances[normalizedHost]) {
+      return { domain: normalizedHost, allowance: allowances[normalizedHost] };
+    }
+
+    for (const site of blockedSites) {
+      if (!hostMatchesBlockedDomain(normalizedHost, site)) continue;
+      const allowance = allowances[site];
+      if (allowance) return { domain: site, allowance };
+    }
+
+    return null;
+  }
+
   return {
     async getBlockedSites() {
       return getBlockedSites();
@@ -80,44 +110,28 @@ export function createBlockService(deps: BlockServiceDeps) {
       }
     },
 
-    async getCustomQuotes(): Promise<Quote[]> {
-      const data = await storage.local.get(STORAGE_KEYS.customQuotes);
-      return (data[STORAGE_KEYS.customQuotes] as Quote[] | undefined) ?? [];
+    async getCustomQuotes() {
+      return getCustomQuotes();
     },
 
     async setCustomQuotes(quotes: Quote[]) {
       await storage.local.set({ [STORAGE_KEYS.customQuotes]: quotes });
     },
 
-    async getAllQuotes(): Promise<Quote[]> {
-      const custom = await this.getCustomQuotes();
-      return [...DEFAULT_QUOTES, ...custom];
+    async getAllQuotes() {
+      return getAllQuotes();
     },
 
     async getRandomQuote(): Promise<Quote> {
-      return pickRandomQuote(await this.getAllQuotes());
+      return pickRandomQuote(await getAllQuotes());
     },
 
     async resolveAllowanceForHost(host: string) {
-      const normalizedHost = normalizeDomain(host);
-      const blockedSites = await getBlockedSites();
-      const allowances = await getAllowances();
-
-      if (blockedSites.includes(normalizedHost) && allowances[normalizedHost]) {
-        return { domain: normalizedHost, allowance: allowances[normalizedHost] };
-      }
-
-      for (const site of blockedSites) {
-        if (!hostMatchesBlockedDomain(normalizedHost, site)) continue;
-        const allowance = allowances[site];
-        if (allowance) return { domain: site, allowance };
-      }
-
-      return null;
+      return resolveAllowanceForHost(host);
     },
 
     async getAllowanceForDomain(domain: string): Promise<Allowance | null> {
-      const resolved = await this.resolveAllowanceForHost(domain);
+      const resolved = await resolveAllowanceForHost(domain);
       return resolved?.allowance ?? null;
     },
 
