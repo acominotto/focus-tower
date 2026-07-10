@@ -6,10 +6,10 @@ on:
     paths:
       - "docs/**"
       - "icons/**"
-      - "static/shared/**"
-      - "static/blocked/test-bg.svg"
-      - "static/blocked/test.svg"
-      - "scripts/generate-icons.ts"
+      - "apps/chrome/static/shared/**"
+      - "apps/chrome/static/blocked/test-bg.svg"
+      - "apps/chrome/static/blocked/test.svg"
+      - "apps/chrome/scripts/generate-icons.ts"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
