@@ -6,7 +6,7 @@
 | ------- | ------------------ |
 | latest  | :white_check_mark: |
 
-Focus Tower is a client-side Chrome extension. Install updates from the [Chrome Web Store](https://chrome.google.com/webstore) or build from the latest release on GitHub.
+Focus Tower is a client-side Chrome extension. Install updates from the [Chrome Web Store](https://chromewebstore.google.com/detail/focus-tower/fpmdfmbpnkomoboldifmpfmccgmglkoh) or build from the latest release on GitHub.
 
 ## Reporting a vulnerability
 

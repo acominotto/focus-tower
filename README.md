@@ -7,6 +7,8 @@ A monorepo for **Focus Tower** — block distractions with inspiring messages. T
 
 **Project page:** [acominotto.github.io/focus-tower](https://acominotto.github.io/focus-tower/)
 
+**Chrome Web Store:** [Focus Tower](https://chromewebstore.google.com/detail/focus-tower/fpmdfmbpnkomoboldifmpfmccgmglkoh)
+
 **Author:** [adrien.cominotto@gmail.com](mailto:adrien.cominotto@gmail.com)
 
 ## Monorepo layout
